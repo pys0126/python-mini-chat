@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Chat</title>
+    <style>
+        body {
+            background-color: rgb(104, 142, 143);
+        }
+        #app {
+            display: block;
+            width: 100%;
+            position: fixed;
+            top: 0;
+        }
+        input {
+            background-color: rgb(155, 127, 192);
+            border-radius: 20px;
+        }
+        .show {
+            width: 100px;
+            position: center;
+        }
+        .msg {
+            height: 25px;
+            background-color: white;
+            margin-left: 30%;
+        }
+        h1 {
+            margin-left: 40%;
+        }
+        p {
+            margin-top: -30px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>迷你聊天室</h1>
+        <input class="msg" placeholder="输入要发送的信息" type="text" v-model="msg">
+        <input class="goto" type="button" value="发送" @click="send">
+        <p>{{ msg }}</p>
+    </div>
+    <br><br><br><br><br><br>
+    <iframe src="out.html" height="500px" width="100%"></iframe>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data: {
+                msg: "",
+            },
+            methods: {
+                send: function(){
+                    axios.post("http://127.0.0.1/send_msg",{msg:this.msg})
+                    .then(function(respose){
+                        this.msg = respose.data.message.msg;                        
+                    },function(err) {
+                        console.log(err);
+                    })
+                }
+            }
+        })
+    </script>
+</body>
+</html>

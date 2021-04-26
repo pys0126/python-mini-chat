@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OUT</title>
+    <style>
+        .clear {
+            position: fixed;
+            margin-left: 80%;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <input class="show" type="button" value="显示全部消息" @click="get_msg" hidden="true">
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                show_msg: ""
+            },
+            methods: {
+                get_msg: setInterval(function(){
+                    axios.get("http://127.0.0.1/msgs")
+                    .then(function(respose) {
+                        if(document.getElementsByTagName("h4").length<respose.data.message.length) {
+                            for(var i=0;i<respose.data.message.length;i++) {
+                                this.show_msg = respose.data.message[i].msg;
+                                var h4 = document.createElement("h4");
+                                h4.innerText = this.show_msg;
+                                document.body.appendChild(h4);
+                                console.log(this.show_msg);
+                            }
+                        } else if(document.getElementsByTagName("h4").length!=0 && respose.data.message[document.getElementsByTagName("h4").length-1].msg) {
+                            console.log(document.getElementsByTagName("h4").length);
+                            this.show_msg = respose.data.message[document.getElementsByTagName("h4").length-1].msg;
+                            var h4 = document.createElement("h4");
+                            h4.innerText = this.show_msg;
+                            document.body.appendChild(h4);
+                            console.log(this.show_msg);
+                        }
+                    },function(err) {
+                        console.log(err);
+                    })
+                },2000)
+            } 
+        });
+    </script>
+</body>
+</html>
